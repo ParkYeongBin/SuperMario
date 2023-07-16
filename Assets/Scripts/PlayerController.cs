@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    public float jumpPower;
     public AudioClip jumpClip_1;
     public AudioClip jumpClip_2;
     public AudioClip powerUpClip;
     public AudioClip powerDownClip;
+    public AudioClip dieClip;
 
     private Rigidbody2D playerRigidbody;
     private Animator playerAnimator;
     private AudioSource playerAudio;
+    private SpriteRenderer playerSpriteRenderer;
 
+    public float jumpPower;
     private bool bFire = false, bSize = false;
     private bool bGround = false, bMove = false, bDown = false;
     private bool bAttack = false, bDie = false;
@@ -21,29 +23,30 @@ public class PlayerController : MonoBehaviour {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
+        playerSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update() {
+        if (bDie) 
+            return;
+
         Move();
         Jump();
         Down();
     }
 
     void Move() {
-        if (Input.GetKey(KeyCode.A) && !bDown)
-        {
+        if (Input.GetKey(KeyCode.A) && !bDown) {
             bMove = true;
             transform.localScale = new Vector2(-1, 1);
             playerRigidbody.velocity = new Vector2(-1f, playerRigidbody.velocity.y);
         }
-        else if (Input.GetKey(KeyCode.D) && !bDown)
-        {
+        else if (Input.GetKey(KeyCode.D) && !bDown) {
             bMove = true;
             transform.localScale = new Vector2(1, 1);
             playerRigidbody.velocity = new Vector2(1f, playerRigidbody.velocity.y);
         }
-        else
-        {
+        else {
             bMove = false;
         }
 
@@ -51,17 +54,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Jump() {
-        if(Input.GetKeyDown(KeyCode.W) && bGround)
-        {
-            playerRigidbody.velocity = Vector2.zero;
-            playerRigidbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        if(Input.GetKeyDown(KeyCode.W) && bGround) {
             bGround = false;
 
-            if (bSize)
-                playerAudio.clip = jumpClip_2;
-            else
-                playerAudio.clip = jumpClip_1;
+            playerRigidbody.velocity = Vector2.zero;
+            playerRigidbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
 
+            playerAudio.clip = bSize ? jumpClip_2 : jumpClip_1;
             playerAudio.Play();
         }
 
@@ -69,37 +68,55 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Down() {
-        if (Input.GetKeyDown(KeyCode.S) && bSize)
+        if (!bSize) return;
+
+        if (Input.GetKeyDown(KeyCode.S))
             bDown = true;
-        else if (Input.GetKeyUp(KeyCode.S) && bSize)
+        else if (Input.GetKeyUp(KeyCode.S))
             bDown = false;
 
         playerAnimator.SetBool("bDown", bDown);
     }
 
-    void OnAttack(Transform enemy) {
-        
+    void FireBall() {
+        // fireball
     }
 
-    void Die() {
-        // Die
+    public void Die() {
+        bDie = true;
+        playerAnimator.SetTrigger("Die");
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        playerAudio.clip = dieClip;
+        playerAudio.Play();
+
+        playerRigidbody.velocity = new Vector2(0, 0);
+        playerRigidbody.AddForce(Vector2.up * 4, ForceMode2D.Impulse);
+
+        StartCoroutine(PauseAndResume(0.5f));
+
+
+        Destroy(gameObject, 3);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.contacts[0].normal.y > 0.7f)
-        {
+        if (collision.contacts[0].normal.y > 0.7f && !collision.gameObject.CompareTag("Enemy")) {
             bGround = true;
         }
 
+        // 문제 발생: 측면 블럭에서 키 입력하면 공중에 떠 있음
+
+        PlayerGetsScore(collision);
 
         if (collision.gameObject.tag == "Enemy") {
-            if (playerRigidbody.velocity.y < 0 && transform.position.y > collision.transform.position.y)
-            {
-                //Attack
+            if (!bGround && playerRigidbody.velocity.y < 0 && transform.position.y > collision.transform.position.y) {
+                OnAttack(collision.transform);
+                playerRigidbody.AddForce(Vector2.up * 2, ForceMode2D.Impulse);
             }
-            else
-                PowerDown();
+            else {
+                PowerDown(collision.transform.position);
+            }
+
         }
     }
 
@@ -107,23 +124,88 @@ public class PlayerController : MonoBehaviour {
         bSize = true;
         playerAnimator.SetBool("bSize", bSize);
 
-        // 이펙트 효과를 추가해야 함
+        StartCoroutine(PauseAndResume(0.7f));
 
         playerAudio.clip = powerUpClip;
         playerAudio.Play();
     }
 
-    public void PowerDown() {
+    public void PowerDown(Vector2 target) {
         if (bSize) {
             bSize = false;
             playerAnimator.SetBool("bSize", bSize);
 
-            // 이펙트 효과 추가
+            StartCoroutine(PauseAndResume(0.4f));
 
             playerAudio.clip = powerDownClip;
             playerAudio.Play();
+
+            StartCoroutine(OnDamaged(target));
         }
         else
             Die();
+    }
+
+    public void FireMode() {
+        bFire = true;
+        playerAnimator.SetBool("bFire", bFire);
+
+        StartCoroutine(PauseAndResume(0.7f));
+
+        playerAudio.clip = powerUpClip;
+        playerAudio.Play();
+    }
+
+    void OnAttack(Transform monster) {
+        Enemy enemy = monster.GetComponent<Enemy>();
+        enemy.OnDamaged();
+    }
+
+    public IEnumerator OnDamaged(Vector2 target) {
+        gameObject.layer = 9;
+
+        int direction = transform.position.x - target.x > 0 ? 1 : -1;
+        playerRigidbody.AddForce(new Vector2(direction, 1) * 1, ForceMode2D.Impulse);
+
+        yield return StartCoroutine(Blink());
+
+        gameObject.layer = 8;
+    }
+
+    private IEnumerator Blink() {
+        for (int i=0; i < 7; i++) {
+            playerSpriteRenderer.color = new Color(1, 1, 1, 0.4f);
+            yield return new WaitForSeconds(0.1f);
+            playerSpriteRenderer.color = new Color(1, 1, 1, 1.0f);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public void PlayerGetsScore(Collision2D collision) {
+        if (collision.gameObject.tag == "Item") {
+            bool isCoin = collision.gameObject.tag.Contains("Coin");
+            bool isMushroom = collision.gameObject.tag.Contains("Mushroom");
+            bool isFlower = collision.gameObject.tag.Contains("Flower");
+            bool isStar = collision.gameObject.tag.Contains("Star");
+
+            if (isStar)
+                GameManager.instance.AddScore(500);
+            else if (isFlower)
+                GameManager.instance.AddScore(300);
+            else if (isMushroom)
+                GameManager.instance.AddScore(200);
+            else if (isCoin)
+                GameManager.instance.AddScore(100);
+
+            collision.gameObject.SetActive(false);
+        }
+    }
+
+    public bool GetBsize() { return bSize; }
+
+    public IEnumerator PauseAndResume(float delay) {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(delay);
+        Time.timeScale = 1;
     }
 }

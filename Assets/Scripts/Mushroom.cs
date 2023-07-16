@@ -2,37 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mushroom : MonoBehaviour {
-    public GameObject otherObject;
+public class Mushroom : Item {
 
-    private Rigidbody2D rigidbody;
-
-    void Start() {
-        rigidbody = GetComponent<Rigidbody2D>();
-        rigidbody.velocity = new Vector2(1f, rigidbody.velocity.y);
+    public override void Start() {
+        base.Start();
+        SetDirection(1);
     }
 
-    void Update() {
-        
+    public override void Update() {
+        base.Update();
     }
 
-    void OnCollisionEnter2D(Collision2D collision) {
+    public override void OnCollisionEnter2D(Collision2D collision) {
+        base.OnCollisionEnter2D(collision);
+
         if (collision.gameObject.tag == "Player") {
-            otherObject.GetComponent<PlayerController>().PowerUp();
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            player.PowerUp();
+            GameManager.instance.AddScore(1000);
             Destroy(gameObject);
         }
-
-        if (collision.contacts[0].normal.x == 1.0f)
-        {
-            transform.localScale = new Vector2(1, 1);
-            rigidbody.velocity = new Vector2(1f, rigidbody.velocity.y);
-        }
-        else if (collision.contacts[0].normal.x == -1.0f)
-        {
-            transform.localScale = new Vector2(-1, 1);
-            rigidbody.velocity = new Vector2(-1f, rigidbody.velocity.y);
-        }
-
     }
-
 }

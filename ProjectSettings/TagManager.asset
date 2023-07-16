@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Item
   - Enemy
+  - Block
   layers:
   - Default
   - TransparentFX
@@ -14,11 +15,11 @@ TagManager:
   - Water
   - UI
   - Platform
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Player
+  - GOD
+  - Item
+  - Block
   - 
   - 
   - 
