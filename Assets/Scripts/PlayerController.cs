@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
+    public GameObject firePrefab;
+
     public AudioClip jumpClip_1;
     public AudioClip jumpClip_2;
     public AudioClip powerUpClip;
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour {
         Move();
         Jump();
         Down();
+        FireBall();
     }
 
     void Move() {
@@ -78,8 +81,19 @@ public class PlayerController : MonoBehaviour {
         playerAnimator.SetBool("bDown", bDown);
     }
 
-    void FireBall() {
-        // fireball
+    public void FireBall() {
+        if (!bFire || !bSize) return;
+
+        if (Input.GetKeyDown(KeyCode.L)) {
+            GameObject gameObject = Instantiate(firePrefab, transform.position, transform.rotation);
+            int direction = playerRigidbody.velocity.x > 0 ? 1 : -1;
+            gameObject.GetComponent<Fireball>().SetDirection(direction);
+            bAttack = true;
+        }
+        else
+            bAttack = false;
+
+        playerAnimator.SetBool("bAttack", bAttack);
     }
 
     public void Die() {
@@ -106,8 +120,6 @@ public class PlayerController : MonoBehaviour {
 
         // 문제 발생: 측면 블럭에서 키 입력하면 공중에 떠 있음
 
-        PlayerGetsScore(collision);
-
         if (collision.gameObject.tag == "Enemy") {
             if (!bGround && playerRigidbody.velocity.y < 0 && transform.position.y > collision.transform.position.y) {
                 OnAttack(collision.transform);
@@ -121,10 +133,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void PowerUp() {
-        bSize = true;
-        playerAnimator.SetBool("bSize", bSize);
-
-        StartCoroutine(PauseAndResume(0.7f));
+        if (!bSize) {
+            bSize = true;
+            playerAnimator.SetBool("bSize", bSize);
+            StartCoroutine(PauseAndResume(0.7f));
+        }
 
         playerAudio.clip = powerUpClip;
         playerAudio.Play();
@@ -147,11 +160,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void FireMode() {
-        bFire = true;
-        playerAnimator.SetBool("bFire", bFire);
-
-        StartCoroutine(PauseAndResume(0.7f));
-
+        if (!bFire) {
+            bFire = true;
+            playerAnimator.SetBool("bFire", bFire);
+            StartCoroutine(PauseAndResume(0.7f));
+        }
         playerAudio.clip = powerUpClip;
         playerAudio.Play();
     }
@@ -178,26 +191,6 @@ public class PlayerController : MonoBehaviour {
             yield return new WaitForSeconds(0.1f);
             playerSpriteRenderer.color = new Color(1, 1, 1, 1.0f);
             yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    public void PlayerGetsScore(Collision2D collision) {
-        if (collision.gameObject.tag == "Item") {
-            bool isCoin = collision.gameObject.tag.Contains("Coin");
-            bool isMushroom = collision.gameObject.tag.Contains("Mushroom");
-            bool isFlower = collision.gameObject.tag.Contains("Flower");
-            bool isStar = collision.gameObject.tag.Contains("Star");
-
-            if (isStar)
-                GameManager.instance.AddScore(500);
-            else if (isFlower)
-                GameManager.instance.AddScore(300);
-            else if (isMushroom)
-                GameManager.instance.AddScore(200);
-            else if (isCoin)
-                GameManager.instance.AddScore(100);
-
-            collision.gameObject.SetActive(false);
         }
     }
 

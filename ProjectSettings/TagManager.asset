@@ -7,6 +7,9 @@ TagManager:
   - Item
   - Enemy
   - Block
+  - Coin
+  - Dummy
+  - FireBall
   layers:
   - Default
   - TransparentFX
@@ -20,9 +23,9 @@ TagManager:
   - GOD
   - Item
   - Block
-  - 
-  - 
-  - 
+  - Coin
+  - Dummy
+  - FireBall
   - 
   - 
   - 

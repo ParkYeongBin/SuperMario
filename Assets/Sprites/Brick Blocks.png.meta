@@ -191,6 +191,90 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Broken_1
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4b832d28d8056d409fb95b49140ccbc
+      internalID: -270860656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Broken_2
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d32695da0050ad4da8ae60c6ea00d23
+      internalID: -1466539608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Broken_3
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67dc49b5308bc8d48b86f16881738835
+      internalID: 1843297525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Broken_4
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 789e062084fbb274d9e01d571c856e83
+      internalID: 2077343267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -203,6 +287,10 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       BrickBlock: 645430460
+      Broken_1: -270860656
+      Broken_2: -1466539608
+      Broken_3: 1843297525
+      Broken_4: 2077343267
       Qblock_afterHit: -1204099509
       Qblock_hit: -1102337657
       Qblock_initial: -337893073
