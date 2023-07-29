@@ -11,6 +11,9 @@ public class Item : MonoBehaviour {
     }
 
     public virtual void Update() {
+        if (rigidbody.position.y < -1)
+            Destroy(gameObject);
+
         rigidbody.velocity = new Vector2(0.3f * direction, rigidbody.velocity.y);
     }
 
@@ -18,10 +21,8 @@ public class Item : MonoBehaviour {
         if (collision.gameObject.tag != "Enemy" && collision.gameObject.tag != "Player" &&
             (collision.contacts[0].normal.x == -1 || collision.contacts[0].normal.x == 1) ) {
             direction *= -1;
+            Debug.DrawRay(collision.contacts[0].point, collision.contacts[0].normal, Color.red, 2.0f);
         }
-
-        //if (collision.gameObject.CompareTag("DeathLine"))
-            //Destroy(gameObject);
     }
 
     public int GetDirection() { return direction; }

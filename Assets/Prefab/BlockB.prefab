@@ -107,8 +107,8 @@ MonoBehaviour:
   - {fileID: 1533933287456897537, guid: fb0839c33e8df694e9e4288eb4fac798, type: 3}
   - {fileID: 3859917512557620796, guid: 0b7a67f03731c064eb19980a63706ce3, type: 3}
   - {fileID: 5475760411616060026, guid: 76bfbe0a94ed44248be4c53e767ed586, type: 3}
-  count: 2
-  coinMode: 1
+  count: 0
+  coinMode: 0
 --- !u!61 &7532048239258284042
 BoxCollider2D:
   m_ObjectHideFlags: 0

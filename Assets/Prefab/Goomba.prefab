@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 778868302539496784}
   - component: {fileID: 778868302539496785}
   - component: {fileID: 778868302539496790}
-  - component: {fileID: 778868302539496786}
+  - component: {fileID: -5255300197713182020}
   - component: {fileID: 778868302539496787}
   - component: {fileID: 778868302539496781}
   - component: {fileID: 778868302539496780}
@@ -110,8 +110,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &778868302539496786
-BoxCollider2D:
+--- !u!58 &-5255300197713182020
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,18 +124,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.16, y: 0.16}
-  m_EdgeRadius: 0
+  m_Radius: 0.08
 --- !u!50 &778868302539496787
 Rigidbody2D:
   serializedVersion: 4
@@ -169,6 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043dcce699863d34898c75b156e8c05f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movedirection: -1
 --- !u!82 &778868302539496780
 AudioSource:
   m_ObjectHideFlags: 0

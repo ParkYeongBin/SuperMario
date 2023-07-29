@@ -169,8 +169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 183124c88e1892f48bb5715b5d0fb531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 4931776011417933334, guid: e518d06b3a18d2941bd282039cc2b898, type: 3}
+  itemPrefab: {fileID: 2276358684028021941, guid: 78e23a35aa38c4849a4d4e9295df9d19, type: 3}
   audioClip: {fileID: 8300000, guid: f941ffafd16655247ba55181ef7e1293, type: 3}
+  coinMode: 1
 --- !u!82 &2644750269675235968
 AudioSource:
   m_ObjectHideFlags: 0

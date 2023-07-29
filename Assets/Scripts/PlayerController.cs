@@ -86,8 +86,6 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.L)) {
             GameObject gameObject = Instantiate(firePrefab, transform.position, transform.rotation);
-            int direction = playerRigidbody.velocity.x > 0 ? 1 : -1;
-            gameObject.GetComponent<Fireball>().SetDirection(direction);
             bAttack = true;
         }
         else
@@ -195,7 +193,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     public bool GetBsize() { return bSize; }
-
+    public int GetDirection() {
+        return transform.localScale.x > 0 ? 1 : -1;
+    }
     public IEnumerator PauseAndResume(float delay) {
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(delay);

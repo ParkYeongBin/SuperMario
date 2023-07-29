@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BlockQ : MonoBehaviour {
     public GameObject itemPrefab;
-
     public AudioClip audioClip;
+    public bool coinMode;
+
     private new Rigidbody2D rigidbody;
     private AudioSource audioSource;
     private Animator animator;
@@ -47,6 +48,37 @@ public class BlockQ : MonoBehaviour {
         itemScript.SetDirection(d);
     }
 
+    private IEnumerator SpawnCoinPrefab() {
+        onHit = true;
+        yield return UpAndDown();
+        onHit = false;
+
+        Vector2 spawnPosition = new Vector2(rigidbody.position.x, rigidbody.position.y + 0.16f);
+        Quaternion spawnRotation = Quaternion.identity;
+        GameObject item = Instantiate(itemPrefab, spawnPosition, spawnRotation);
+        item.gameObject.GetComponent<Coin>().PopUpCoin();
+
+        Vector2 targetPosition = spawnPosition + Vector2.up * 0.64f;
+        float elapsedTime = 0.0f;
+        float duration = 0.2f;
+
+        while (elapsedTime < duration) {
+            float t = elapsedTime / duration;
+            item.transform.position = Vector2.Lerp(spawnPosition, targetPosition, t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        elapsedTime = 0.0f;
+
+        while (elapsedTime < duration) {
+            float t = elapsedTime / duration;
+            item.transform.position = Vector2.Lerp(targetPosition, spawnPosition, t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        item.gameObject.GetComponent<Coin>().Off();
+    }
+
     private IEnumerator UpAndDown() {
         float elapsedTime = 0.0f;
         float duration = 0.15f;
@@ -76,7 +108,10 @@ public class BlockQ : MonoBehaviour {
             int direction = transform.position.x - collision.transform.position.x > 0 ? 1 : -1;
             isActivated = true;
             animator.SetTrigger("OnHit");
-            StartCoroutine(SpawnItemPrefab(direction));
+            if (!coinMode)
+                StartCoroutine(SpawnItemPrefab(direction));
+            else
+                StartCoroutine(SpawnCoinPrefab());
         }
     }
 

@@ -35,12 +35,16 @@ public class Goomba : Enemy
         spriteRenderer.flipY = true;
 
         //Collider Disable
-        colliderD.enabled = false;
+        circleCollider.enabled = false;
 
         //Die Effect Jump
         rigidbody.AddForce(Vector2.up * 50);
 
         Destroy(gameObject, 1);
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D collision) {
+        base.OnCollisionEnter2D(collision);
     }
 }
 

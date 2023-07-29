@@ -7,12 +7,17 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    //public Text scoreText;
+    public Text scoreText;
+    public Text coinText;
+    public Text timeText;
+    public Text worldText;
     
     public bool isGameover = false;
     private int totalScore;
-    private int currentScore;
+    private int currentScore = 0;
     private int[] stageScore = new int[3];
+    private int coinCount = 0;
+    private float time = 300.0f;
 
     void Awake() {
         if (instance == null)
@@ -24,6 +29,8 @@ public class GameManager : MonoBehaviour
     }
 
     void Update() {
+        RemainedTime();
+
         if (isGameover && Input.anyKey)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -31,7 +38,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score) {
         if (!isGameover) {
             currentScore += score;
-            // scoreText.text = "Score : " + score;
+            scoreText.text = currentScore.ToString("D6");
         }
     }
 
@@ -41,5 +48,20 @@ public class GameManager : MonoBehaviour
             stageScore[n] = currentScore;
             totalScore += stageScore[n];
         }
+    }
+
+    public void AddCoinCount(int count) {
+        coinCount += count;
+        coinText.text = "x" + coinCount.ToString("D2"); 
+    }
+
+    public void RemainedTime() {
+        if (time <= 0) {
+            isGameover = true;
+        }
+
+        time -= Time.deltaTime;
+        time = (int)time;
+        timeText.text = time.ToString("D3");
     }
 }
