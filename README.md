@@ -2,7 +2,7 @@
 잘 알려진 게임, 슈퍼 마리오 브로스를 일부 구현해보았습니다.
 
 
-[![Video Label](http://img.youtube.com/vi/YNiGddpDZNA/0.jpg)]
+[![Video Label](http://img.youtube.com/vi/YNiGddpDZNA/0.jpg)](https://youtu.be/YNiGddpDZNA)
 
 
 ## 세부사항
